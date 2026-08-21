@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "maestro-autopilot target configuration",
+  "type": "object",
+  "required": ["project_id", "platforms"],
+  "properties": {
+    "project_id": { "type": "string" },
+    "workspace": { "type": "string", "description": "App source repo; commits for `plan` come from here." },
+    "app_source": { "type": "string" },
+    "knowledge_dir": { "type": "string", "default": "knowledge" },
+    "artifacts_dir": { "type": "string", "default": "artifacts" },
+    "java_home_candidates": { "type": "array", "items": { "type": "string" } },
+    "platforms": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["app_id", "manifest"],
+        "properties": {
+          "enabled": { "type": "boolean", "default": true },
+          "app_id": { "type": "string" },
+          "manifest": { "type": "string" },
+          "smoke_flow": { "type": "string" },
+          "build_command": { "type": "string" },
+          "preferred_apk": { "enum": ["release", "debug"] },
+          "apk_paths": { "type": "object", "additionalProperties": { "type": "string" } },
+          "reverse_ports": { "type": "array", "items": { "type": "integer" } },
+          "restore_connectivity": { "type": "boolean", "default": true },
+          "device": {
+            "type": "object",
+            "properties": {
+              "kind": { "enum": ["simulator", "emulator", "real"] },
+              "udid": { "type": "string" },
+              "name": { "type": "string" },
+              "serial": { "type": "string" },
+              "allow_emulator": { "type": "boolean", "default": false },
+              "known_bad": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "dev_server": {
+            "type": "object",
+            "properties": {
+              "port": { "type": "integer", "default": 8081 },
+              "start_command": { "type": "string" },
+              "forbidden_env": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "properties": {
+        "per_flow_timeout_seconds": { "type": "integer", "default": 600 },
+        "max_repair_loops": { "type": "integer", "default": 2 },
+        "default_status": { "type": "string", "default": "active" },
+        "exclude_tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "seed": {
+      "type": "object",
+      "properties": {
+        "command": { "type": "string", "description": "{run_id} is substituted." },
+        "env_prefix": { "type": "string", "default": "SEED" }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "source_root": { "type": "string" },
+        "ignore_globs": { "type": "array", "items": { "type": "string" } },
+        "map": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["glob", "families"],
+            "properties": {
+              "glob": { "type": "string" },
+              "families": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "pr": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "branch_prefix": { "type": "string", "default": "autopilot/" },
+        "base": { "type": "string", "default": "main" },
+        "remote": { "type": "string", "default": "origin" },
+        "labels": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

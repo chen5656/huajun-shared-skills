@@ -1,0 +1,12 @@
+{
+  "rules": [
+    {
+      "id": "quota-exhausted",
+      "klass": "environment",
+      "pattern": "Monthly token limit reached",
+      "explain": "The test account's paid quota is spent. Not a bug, not fixable in YAML.",
+      "fix": "Budget reruns; the quota resets monthly.",
+      "needs_screenshot": true
+    }
+  ]
+}
