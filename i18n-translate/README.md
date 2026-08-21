@@ -41,6 +41,25 @@ It is stated as a role check rather than a model name, so the same file works wh
 worker is Gemini, a local model, or the same agent you started from. Naming a specific
 model there was my first version and it was wrong — it broke the moment the setup changed.
 
+## The context tax nobody notices
+
+There is a second, less obvious waste, and it is the one that actually costs the most.
+Translation almost never comes first. It comes at the end of a long session — the agent
+just finished a feature, debugged it, ran the tests, and is now sitting on a very large
+context window. Then it does the natural thing: "while I'm here, let me update the
+catalogs too."
+
+Now every single one of those ~50-entry batches gets billed against that entire
+accumulated context. The feature diff, the test output, the files read three hours ago —
+all of it rides along on every translation turn, for work that needs to know nothing
+except the source string and the target locale. The per-token price never changed; the
+number of tokens per unit of work quietly went up by an order of magnitude.
+
+A separate worker process fixes this by construction. It starts cold, sees only the
+catalogs and the skill, and exits when it's done. That is why the skill insists on
+launching a *new* process rather than "switching to a cheaper model" mid-session —
+changing the model does nothing about the context you are dragging behind you.
+
 ## Why a Python helper instead of "translate this .po file"
 
 [`translate_helper.py`](translate_helper.py) does the parts a language model should not be trusted
