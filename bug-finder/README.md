@@ -69,13 +69,62 @@ to grep for after shipping to users who never file bug reports.
 ## Focused variants
 
 The full run is broad. For a targeted pass, invoke the skill with a narrowed scope — it keeps the same
-three-agent structure while scanning for one class of defect:
-
-- **Race conditions** — "Use bug-finder, but only race-condition issues: read/write ordering, async
-  state updates, re-render timing, duplicate in-flight requests."
-- **Performance** — same shape, scoped to hot paths, N+1 queries, and unnecessary re-renders.
+three-agent structure while scanning for one class of defect. No changes to the skill are needed; the
+scope lives entirely in how you phrase the invocation.
 
 Narrow runs are much cheaper and tend to produce a higher confirmed-bug rate than a full sweep.
+
+### Correctness scopes
+
+- **Race conditions (server/shared state)** — "Use bug-finder, but only race-condition issues:
+  read/write ordering, check-then-act gaps, non-atomic updates, retries that double-apply."
+- **Client-side race conditions** — the browser-specific half, worth its own run: async state updates
+  landing after unmount or after a newer render, **duplicate in-flight requests** for the same key,
+  **stale data usage** (a closure or ref holding a value from two states ago), **out-of-order
+  responses** where a slow request overwrites a fast newer one, **concurrent user actions** (double
+  submit, rapid tab switching, typing during a save), and **event handling overlaps** — two handlers
+  that both fire and both mutate the same state.
+  > "Use bug-finder scoped to client-side races: for every async call, ask what happens if it resolves
+  > after a newer one, after navigation, or twice."
+- **UI flicker / layout jank** — a class of bug users complain about and stack traces never show:
+  content that renders, then re-renders with different data; loading states that flash for 40ms;
+  layout shifting as images or fonts settle; a value that briefly shows the previous item's data
+  during a transition.
+  > "Use bug-finder for visible flicker: any state that renders an intermediate value on the way to
+  > the final one."
+- **Performance** — hot paths, N+1 queries, unnecessary re-renders.
+- **Over-fetching** — queries and endpoints that pull more than the caller needs: `SELECT *` behind a
+  two-field view, a list endpoint returning full nested objects for a dropdown, a fetch inside a loop,
+  refetching data already in cache, or subscribing to a whole store to read one key.
+
+### Structural / hygiene scopes
+
+These read less like bug hunts and more like standing cleanup crews. Same three-agent structure — the
+adversary keeps the list honest, which matters more here, because refactor suggestions are exactly
+where an agent pads.
+
+- **"Changed the wrapper, not the callers"** — a signature, default, unit, or return shape changed in
+  one place while some call sites still assume the old contract. Common after a hurried refactor and
+  invisible to type checks when the types are loose (`any`, untyped JSON, string enums, optional
+  params silently defaulted).
+  > "Use bug-finder to find contract drift: for each recently changed function/component/API, check
+  > every call site actually matches the new behavior, not just the new types."
+- **Dup unifier** — scans for similar-yet-slightly-divergent abstractions: two date formatters that
+  disagree on timezone, three "retry" helpers with different backoff, copy-pasted validation that
+  diverged in one branch. The interesting output isn't "these are duplicates" but "these are
+  duplicates **that no longer agree**" — which is a live bug, not a style issue.
+  > "Use bug-finder as a duplicate unifier: find near-identical implementations and report where their
+  > behavior has diverged."
+- **Dead-code remover** — two passes worth asking for separately: *statically unreachable* code
+  (unexported and unreferenced, branches behind an always-false condition, unused exports) and
+  *suspected dead* code (a feature flag that's been on for a year, an endpoint with no caller in the
+  repo, a component only referenced by its own test). The second list needs human judgment — ask for
+  it separately and labelled as suspicion, not fact.
+- **Abstraction police** — leaky abstractions: a repository layer that returns raw driver rows, a UI
+  component that knows the database column names, an error type that only makes sense to one caller,
+  a "generic" helper with a special case for one call site.
+  > "Use bug-finder as abstraction police: find places where an abstraction's implementation details
+  > leak into its callers, or where a caller must know something the interface promised to hide."
 
 ## Before you run it
 
