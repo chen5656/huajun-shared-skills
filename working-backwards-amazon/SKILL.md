@@ -1,6 +1,6 @@
 ---
 name: working-backwards-amazon
-description: Create, review, and finalize an Amazon-style Working Backwards feature package. Use whenever the user wants to discuss, define, validate, scope, or prepare implementation of a feature, workflow, major UX change, or product experiment. Inspect the repository, interview the user, and save a readable PRESS-RELEASE.md plus an implementation-complete BUILD-SPEC.md in docs/working-backwards/FEATURE-SLUG/.
+description: Create, review, and finalize an Amazon-style Working Backwards feature package for substantial product work that needs customer-outcome discovery, scope decisions, or an implementation plan before coding. Use when the user wants to define, validate, or scope a new feature, workflow, major cross-cutting UX change, or product experiment whose behavior or tradeoffs are not already settled. Do not use for routine implementation tasks that do not need a plan, straightforward bug fixes, or purely visual/UI updates. Inspect the repository, interview the user, and save a readable PRESS-RELEASE.md plus an implementation-complete BUILD-SPEC.md in docs/working-backwards/FEATURE-SLUG/.
 ---
 
 # Working Backwards Feature Package
@@ -11,6 +11,16 @@ Turn an early feature idea into two complementary documents:
 - `BUILD-SPEC.md` is the complete implementation contract an independent agent can execute.
 
 Start from the customer outcome, not the proposed implementation. Read both `references/press-release-template.md` and `references/build-spec-template.md` completely before drafting or revising either document.
+
+## Applicability Gate
+
+Use this workflow only when the request requires product discovery or meaningful planning before implementation. Do not use it when the user is asking to:
+
+- Complete a routine, already-defined task that does not need a plan
+- Fix a straightforward bug with a clear expected behavior
+- Make a purely visual or UI-only update without new product behavior, policy, data, or workflow decisions
+
+For these excluded requests, handle the work directly using the repository's normal implementation and verification process. If a seemingly simple request reveals unresolved product behavior or material cross-cutting decisions, explain that change in scope before proposing this workflow.
 
 ## Core Rules
 
