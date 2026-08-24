@@ -38,7 +38,7 @@ Identify the project's primary language, framework, and source directories by sc
 
 ### Token-Saving: Mandatory Session Splitting
 
-**Every step** (Bug Hunter, Adversarial, Referee) MUST be divided into multiple sequential subagent sessions. This is mandatory — not optional — because a single session scanning the entire codebase accumulates too much context and wastes tokens.
+**Every step** (Bug Hunter, Adversary, Referee) MUST be divided into multiple sequential subagent sessions. This is mandatory — not optional — because a single session scanning the entire codebase accumulates too much context and wastes tokens.
 
 **How to split:**
 1. Before starting a step, divide the codebase into logical sections (e.g., by directory, feature area, or module). Aim for 3-6 sections depending on project size.
@@ -304,7 +304,7 @@ Use this format:
 
 ## Summary
 
-| Metric | Bug Hunter | Adversarial |
+| Metric | Bug Hunter | Adversary |
 |--------|-----------|-------------|
 | Correct assessments | <N> | <N> |
 | Incorrect assessments | <N> | <N> |
@@ -316,11 +316,11 @@ Use this format:
 ## Bug #<N> — <title>
 
 - **Bug Hunter said:** <bug exists, impact level>
-- **Adversarial said:** <CONCEDE or CHALLENGE + reasoning summary>
+- **Adversary said:** <CONCEDE or CHALLENGE + reasoning summary>
 - **Referee verdict:** REAL BUG | FALSE POSITIVE
 - **Confirmed impact:** Critical (+10) | Some (+5) | Low (+1) | N/A (false positive)
 - **Bug Hunter:** <Correct ✓ / Incorrect ✗> (<points>)
-- **Adversarial:** <Correct ✓ / Incorrect ✗> (<points>)
+- **Adversary:** <Correct ✓ / Incorrect ✗> (<points>)
 
 ### Reasoning
 <Your independent analysis. Cite specific code.>
@@ -361,7 +361,7 @@ After all three steps complete, report to the user:
 2. Print a brief summary:
    - Total bugs found by hunter
    - Total confirmed by referee
-   - Total false positives caught by adversarial
+   - Total false positives caught by the adversary
    - Top 3 most critical confirmed bugs (one line each)
 
 3. Ask the user if they want to start fixing the confirmed bugs.
@@ -371,7 +371,7 @@ After all three steps complete, report to the user:
 ## Important Notes
 
 - Each agent must independently read the source code — they should not trust the other agents' code snippets blindly.
-- The scoring incentives are intentionally asymmetric to discourage false positives (hunter) and reckless challenges (adversarial).
+- The scoring incentives are intentionally asymmetric to discourage false positives (hunter) and reckless challenges (adversary).
 - The referee's "ground truth" framing is a white lie to encourage maximum diligence.
 - If Codex CLI is not available, all three steps can run as Task subagents. The key is that each agent gets a fresh context without seeing the other agents' system prompts or incentive structures.
 - Keep each step's prompt self-contained — do not leak the meta-strategy to any agent.

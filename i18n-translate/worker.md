@@ -8,6 +8,13 @@ The helper script is `<SKILL_DIR>/translate_helper.py`. Store session files at
 
 ## 1. Inspect and extract
 
+Work in the **target repo** — the path named in your prompt, i.e. the repo whose
+catalogs need translating. It is not the skill directory that holds this file and
+`translate_helper.py`; that directory has no catalogs. `cd` to the target repo
+first and run every command from there. If you cannot find `package.json`,
+`lingui.config.ts`, or `src/locales`, stop and report that the repo path is wrong —
+do not report "0 missing", which would read as a successful no-op run.
+
 Confirm that the repo uses Lingui and locate `lingui.config.ts`, `src/locales`, and the package scripts. Then run:
 
 ```bash

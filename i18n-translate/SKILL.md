@@ -24,12 +24,19 @@ Check whether `<SKILL_DIR>/.init-config.json` exists. If it doesn't, read
 2. **Call the worker (attempt 1 of 3).** Run, in the background:
 
    ```bash
-   $AGENT_CLI --model "$MODEL" --mode accept-edits --add-dir "$SKILL_DIR" --print-timeout 30m $EXTRA_FLAGS \
-     --print "Act as the translation worker for this repo. Read $SKILL_DIR/worker.md in full, then follow it to completion. Do not launch another worker."
+   cd "$REPO_ROOT" && $AGENT_CLI --model "$MODEL" --mode accept-edits --add-dir "$SKILL_DIR" --print-timeout 30m $EXTRA_FLAGS \
+     --print "Act as the translation worker for the repo at $REPO_ROOT. That is the target repo: run every command there, and never in $SKILL_DIR (that directory only holds the worker prompt and helper scripts). Read $SKILL_DIR/worker.md in full, then follow it to completion. Do not launch another worker."
    ```
 
    `$EXTRA_FLAGS` is the `extra_flags` value from `.init-config.json` (empty if
    unset) — e.g. for `agy` this is typically `--dangerously-skip-permissions`.
+   `$REPO_ROOT` is the absolute path of the **target repo** you ran the extract in.
+   Always spell it out in the prompt and `cd` there first: some agent CLIs adopt
+   the `--add-dir` path as their working directory, and a worker that starts in
+   `$SKILL_DIR` finds no catalogs and exits reporting "0 missing" — a false
+   success. If a worker's report says it found no catalogs or no `package.json`,
+   treat that as an environment failure, not a translation result, and re-run with
+   the repo path stated explicitly.
 
    Tell the user it's running and wait for it to exit rather than polling. A full
    run can take 20-30 minutes.
