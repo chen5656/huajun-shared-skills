@@ -14,7 +14,7 @@ worker's prompt, not yours.
 
 Check whether `<SKILL_DIR>/.init-config.json` exists. If it doesn't, read
 `<SKILL_DIR>/init.md` and follow it before continuing. If it does, read it for
-`agent_cli`, `model`, and `skill_dir`.
+`agent_cli`, `model`, `skill_dir`, and optional `extra_flags`.
 
 ## Orchestrator workflow
 
@@ -24,9 +24,12 @@ Check whether `<SKILL_DIR>/.init-config.json` exists. If it doesn't, read
 2. **Call the worker (attempt 1 of 3).** Run, in the background:
 
    ```bash
-   $AGENT_CLI --model "$MODEL" --mode accept-edits --add-dir "$SKILL_DIR" --print-timeout 30m \
+   $AGENT_CLI --model "$MODEL" --mode accept-edits --add-dir "$SKILL_DIR" --print-timeout 30m $EXTRA_FLAGS \
      --print "Act as the translation worker for this repo. Read $SKILL_DIR/worker.md in full, then follow it to completion. Do not launch another worker."
    ```
+
+   `$EXTRA_FLAGS` is the `extra_flags` value from `.init-config.json` (empty if
+   unset) — e.g. for `agy` this is typically `--dangerously-skip-permissions`.
 
    Tell the user it's running and wait for it to exit rather than polling. A full
    run can take 20-30 minutes.
