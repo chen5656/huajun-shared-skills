@@ -3,6 +3,7 @@
 > Status: Draft  
 > Owner: [Name/team]  
 > Last updated: [YYYY-MM-DD]  
+> Planned software version: [Version or TBD]  
 > Change classification: [BREAKING | NON_BREAKING | TBD]  
 > Human review document: [PRESS-RELEASE.md](./PRESS-RELEASE.md)
 

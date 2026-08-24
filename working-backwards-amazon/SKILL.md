@@ -12,6 +12,12 @@ Turn an early feature idea into two complementary documents:
 
 Start from the customer outcome, not the proposed implementation. Read both `references/press-release-template.md` and `references/build-spec-template.md` completely before drafting or revising either document.
 
+## Startup Version Gate
+
+At the start of the workflow, before repository inspection or the broader interview, ask the user which software version this feature is planned for unless they already stated it explicitly. Do not infer the version from repository files, branches, tags, or release history.
+
+Record the user's answer as `Planned software version` in the metadata of both `PRESS-RELEASE.md` and `BUILD-SPEC.md`. If the user says the version is undecided, record `TBD` and track it as an unresolved decision in both documents.
+
 ## Applicability Gate
 
 Use this workflow only when the request requires product discovery or meaningful planning before implementation. Do not use it when the user is asking to:
@@ -83,6 +89,7 @@ For `BUILD-SPEC.md`:
 
 Determine:
 
+- Planned software version
 - Working feature name and slug
 - Repository root and affected product
 - Primary customer and role
@@ -145,6 +152,7 @@ Before drafting, verify that the following are sufficiently resolved:
 - Technical integration points
 - Success measures and guardrails
 - Rollout and migration
+- Planned software version, or an explicit `TBD` decision
 
 If a major item is unresolved, ask the next focused question batch. Minor uncertainty may remain as an explicit assumption or open question.
 
@@ -173,6 +181,7 @@ Do not turn the press release into a requirements database. If a detail mainly h
 `BUILD-SPEC.md` must let a capable engineer or agent implement the feature using only the repository and this file. Include, when applicable:
 
 - Context summary and links to the press release
+- Planned software version
 - Confirmed decisions, assumptions, and open questions
 - Personas, role matrix, end-to-end flows, and lifecycle
 - UI surfaces and all interaction states

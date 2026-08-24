@@ -3,6 +3,7 @@
 > Status: Draft  
 > Owner: [Name/team]  
 > Last updated: [YYYY-MM-DD]  
+> Planned software version: [Version or TBD]  
 > Companion implementation contract: [BUILD-SPEC.md](./BUILD-SPEC.md)
 
 ## Problem to Solve
