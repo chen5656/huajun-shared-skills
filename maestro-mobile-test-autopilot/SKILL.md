@@ -249,10 +249,15 @@ representative image.
 **Never report "everything is fine" without evidence gathered in this same turn.**
 Not from the assumption that a process you started is still healthy. Minimum: has
 `PROGRESS.md` moved; is the process alive; does a live screengrab show the app (not a
-launcher, crash dialog, or lock screen). If the counter has not moved in ~10 minutes,
-say so immediately and start triage — do not wait to be asked. "It is running
-normally" is a claim about the last minute, not the last hour. **If you have not
-looked, say you have not looked.**
+launcher, crash dialog, or lock screen). "It is running normally" is a claim about the
+last minute, not the last hour. **If you have not looked, say you have not looked.**
+
+**Check-in cadence scales with how much of the batch is left.** Read
+`PROGRESS.md`'s `Flows: X/Y finished` line: while more than 5 flows remain, check in
+every ~30 minutes; once 5 or fewer remain, tighten to every ~10 minutes — the tail is
+where a hang is both more likely to matter (closest to done) and cheapest to catch
+early. Whatever the cadence, if the counter has not moved since the last check, say so
+immediately and start triage — do not wait to be asked.
 
 ## 11. Real-device etiquette
 
