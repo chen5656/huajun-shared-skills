@@ -56,6 +56,10 @@
     "exclude_tags": ["real_api"]
   },
 
+  "report": {
+    "compress_screenshots": true
+  },
+
   "seed": {
     "command": "node scripts/seed.mjs --json --run-id {run_id}",
     "env_prefix": "SEED",

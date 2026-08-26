@@ -56,8 +56,8 @@ verify 0 missing per locale.
 forces the job onto a cheap worker model — an orchestrating agent reading the skill is told it may not
 do the work itself, because capable agents helpfully do cheap work and the saving evaporates silently.
 And a **deterministic Python helper** owns everything where being wrong is expensive: batching,
-placeholder and plural safety, whitespace, and the overflow audit that catches a German string too
-long for its button.
+placeholder and plural safety, whitespace, and the overflow audit that catches a French or Spanish string
+too long for its button.
 
 **Choose it when** you ship multi-locale Lingui releases regularly. **Skip it if** you're not on
 Lingui — the helper is `.po`-specific.

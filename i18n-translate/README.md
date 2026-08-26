@@ -95,8 +95,8 @@ with:
   before anything is written back, so a plausible-looking translation cannot silently
   break interpolation at runtime.
 - **UI overflow audit.** Flags translations that grew past what tight surfaces — buttons,
-  tabs, badges, fixed-height cards — can display. German and French routinely run 30%
-  longer than English, and this is otherwise found by a user, in production, on a phone.
+  tabs, badges, fixed-height cards — can display. French and Spanish routinely run up to
+  30% longer than English, and this is otherwise found by a user, in production, on a phone.
 - **Verification that means something.** The run is only successful if `lingui:compile`
   passes *and* every locale reports 0 missing. A subset is a failure, not partial credit.
 

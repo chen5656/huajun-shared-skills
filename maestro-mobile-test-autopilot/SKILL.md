@@ -244,7 +244,13 @@ Structure it for someone who was not there:
 6. **Bugs found** — reported, never fixed.
 
 The report embeds **every** screenshot, grouped by flow. No cherry-picking a
-representative image.
+representative image. Screenshots are inlined as compressed data URIs (turn it off with
+`report.compress_screenshots: false` or `--no-compress-screenshots` when the
+pixels themselves are the evidence), so `report.html` is **one self-contained file** — attach it to a PR or read it after
+the run root is cleaned and the evidence is still there. Its header names the app
+id, the installed **app version**, the device, start and finish time, and total
+duration; each flow carries its own duration. A green run against an unnamed
+binary at an unknown time cannot be replayed, so it does not count as reported.
 
 **Never report "everything is fine" without evidence gathered in this same turn.**
 Not from the assumption that a process you started is still healthy. Minimum: has

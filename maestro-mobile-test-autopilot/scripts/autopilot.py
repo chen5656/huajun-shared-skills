@@ -7,7 +7,7 @@ repo's autopilot.json and knowledge/ directory.
     autopilot.py preflight --platform ios
     autopilot.py run       --platform ios [--only ID ...] [--family F]
     autopilot.py plan      [--since-hours 24]      # commits -> work order
-    autopilot.py report    [--run-root PATH]
+    autopilot.py report    [--run-root PATH] [--no-compress-screenshots]
     autopilot.py context                            # lessons for the agent
     autopilot.py lesson    --id ... --scope ... ...
     autopilot.py bug       --id ... --flow ... ...
@@ -42,6 +42,13 @@ def cmd_preflight(args):
             print(json.dumps(preflight.run(cfg, plat, skip_install=args.skip_install), indent=2))
 
 
+def _compress_screenshots(cfg, args) -> bool:
+    """Default on. --no-compress-screenshots on the command line beats the config."""
+    if getattr(args, "no_compress_screenshots", False):
+        return False
+    return bool(cfg.get("report.compress_screenshots", True))
+
+
 def cmd_run(args):
     cfg = _cfg(args)
     summary = runner.run_batch(
@@ -50,7 +57,7 @@ def cmd_run(args):
         run_root=args.run_root, no_seed=args.no_seed,
     )
     root = Path(summary["run_root"])
-    report.write(root)
+    report.write(root, compress=_compress_screenshots(cfg, args))
     print(f"\n{summary['passed']} passed, {summary['failed']} failed — {summary['verdict']}")
     print(f"Report: {root / 'report.html'}")
     return 0 if summary["failed"] == 0 else 1
@@ -80,7 +87,7 @@ def cmd_report(args):
     cfg = _cfg(args)
     root = Path(args.run_root) if args.run_root else \
         cfg.artifacts / "autopilot" / "maestro-runs" / f"latest-{args.platform or 'ios'}"
-    print(report.write(root.resolve()))
+    print(report.write(root.resolve(), compress=_compress_screenshots(cfg, args)))
 
 
 def cmd_context(args):
@@ -154,11 +161,13 @@ def main(argv=None):
     p.add_argument("--only", action="append"); p.add_argument("--exclude", action="append")
     p.add_argument("--family", action="append"); p.add_argument("--status", default=None)
     p.add_argument("--run-root"); p.add_argument("--no-seed", action="store_true")
+    p.add_argument("--no-compress-screenshots", action="store_true")
     p.set_defaults(fn=cmd_run)
 
     p = sub.add_parser("list"); p.add_argument("--platform", required=True); p.set_defaults(fn=cmd_list)
     p = sub.add_parser("plan"); p.add_argument("--since-hours", type=int, default=24); p.set_defaults(fn=cmd_plan)
-    p = sub.add_parser("report"); p.add_argument("--run-root"); p.add_argument("--platform"); p.set_defaults(fn=cmd_report)
+    p = sub.add_parser("report"); p.add_argument("--run-root"); p.add_argument("--platform")
+    p.add_argument("--no-compress-screenshots", action="store_true"); p.set_defaults(fn=cmd_report)
     p = sub.add_parser("context"); p.add_argument("--scope", action="append"); p.set_defaults(fn=cmd_context)
 
     p = sub.add_parser("lesson")

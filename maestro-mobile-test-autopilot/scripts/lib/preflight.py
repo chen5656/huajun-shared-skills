@@ -106,7 +106,8 @@ def run(cfg: Config, platform: str, *, reboot: bool = False, skip_install: bool 
     if smoke:
         _smoke(cfg, platform, p, target, smoke)
 
-    record = {"platform": platform, "app_id": app_id, "target": target, "at": _now()}
+    record = {"platform": platform, "app_id": app_id, "target": target, "at": _now(),
+              "app_version": devices.app_version(platform, target, app_id)}
     _ready_path(cfg, platform).write_text(json.dumps(record, indent=2))
     return record
 

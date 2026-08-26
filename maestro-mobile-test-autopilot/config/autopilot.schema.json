@@ -56,6 +56,16 @@
         "exclude_tags": { "type": "array", "items": { "type": "string" } }
       }
     },
+    "report": {
+      "type": "object",
+      "properties": {
+        "compress_screenshots": {
+          "type": "boolean",
+          "default": true,
+          "description": "Inline screenshots as downscaled JPEG data URIs. false keeps the original PNGs — full fidelity, a much larger report."
+        }
+      }
+    },
     "seed": {
       "type": "object",
       "properties": {

@@ -45,6 +45,15 @@ searches upward from the cwd. Start from `config/autopilot.example.json`.
 instead of blocking the batch. `exclude_tags` — manifest boolean flags that exclude a
 flow from default batches (e.g. `real_api` for flows that spend a paid quota).
 
+## `report`
+
+`compress_screenshots` (default `true`) — screenshots are inlined into `report.html`
+as data URIs so the report stays readable after it is moved or the run root is
+cleaned. Compressed, they are downscaled to 900px wide JPEG (via `sips`; on a host
+without it the PNG is inlined as-is), which keeps a whole batch in the tens of MB.
+Set it to `false`, or pass `--no-compress-screenshots`, when the pixels themselves
+are the evidence — a rendering bug — and accept a much larger file.
+
 ## `seed`
 
 ```json

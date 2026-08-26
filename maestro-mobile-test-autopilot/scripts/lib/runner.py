@@ -118,6 +118,7 @@ def run_batch(cfg: Config, platform: str, *, only=None, exclude=None, status=Non
     if not flows:
         raise ConfigError("No flows selected")
 
+    batch_started = time.time()
     root = _run_root(cfg, platform, run_root)
     latest = cfg.artifacts / "autopilot" / "maestro-runs" / f"latest-{platform}"
     print(f"Run root: {root}\nWatch: cat {latest}/PROGRESS.md")
@@ -176,7 +177,10 @@ def run_batch(cfg: Config, platform: str, *, only=None, exclude=None, status=Non
 
     summary = {
         "platform": platform, "device": device, "run_root": str(root),
+        "app_id": record.get("app_id"), "app_version": record.get("app_version"),
+        "started_at": datetime.fromtimestamp(batch_started).isoformat(timespec="seconds"),
         "at": datetime.now().isoformat(timespec="seconds"),
+        "wall_seconds": time.time() - batch_started,
         "passed": sum(1 for r in results if r["passed"]),
         "failed": sum(1 for r in results if not r["passed"]),
         "verdict": triage.batch_verdict(results),

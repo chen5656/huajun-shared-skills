@@ -28,7 +28,9 @@ Everything here is a defence against that.
 - **Turns commits into a work order.** `plan` maps the last N hours of product commits to
   the flows that cover them, and names the changed surfaces nothing covers.
 - **Reports with evidence** — every screenshot, grouped by flow, with a batch-level
-  verdict, because "40 failed" is a lie when it is one dead server.
+  verdict, because "40 failed" is a lie when it is one dead server. The report is one
+  self-contained file: screenshots are inlined (compressed by default), and the header
+  names the app version, the device and the run's start, finish and duration.
 - **Proposes, never pushes.** Unattended changes land on a branch and open a PR.
 
 ## What it is not
@@ -70,7 +72,7 @@ Point your agent at [`SKILL.md`](SKILL.md) — it is the operating contract the 
 | `plan --since-hours 24` | commits → work order (covered / uncovered / unmapped) |
 | `context` | the lessons an agent should read before acting |
 | `lesson` / `bug` | append to the knowledge base |
-| `report [--run-root PATH]` | render `report.html` with all evidence |
+| `report [--run-root PATH] [--no-compress-screenshots]` | render a self-contained `report.html` (screenshots inlined, app version + timings in the header) |
 | `pr --title ... [--push]` | branch, commit, open a PR |
 
 ## Scheduling

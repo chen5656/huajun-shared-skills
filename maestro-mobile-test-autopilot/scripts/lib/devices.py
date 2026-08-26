@@ -138,3 +138,33 @@ def restore_connectivity(serial: str) -> None:
         ["shell", "svc", "data", "enable"],
     ):
         _run(["adb", "-s", serial, *cmd], timeout=30)
+
+
+def app_version(platform: str, target: dict, app_id: str) -> str | None:
+    """Human-readable installed version, e.g. "1.4.2 (318)".
+
+    A run report that does not name the binary it drove cannot be replayed.
+    Never fatal: a missing version degrades the report, it does not invalidate
+    the run.
+    """
+    try:
+        if platform == "android":
+            out = _run(["adb", "-s", target["serial"], "shell", "dumpsys", "package", app_id]).stdout
+            name = re.search(r"versionName=(\S+)", out)
+            code = re.search(r"versionCode=(\d+)", out)
+            if not name:
+                return None
+            return f"{name.group(1)} ({code.group(1)})" if code else name.group(1)
+
+        container = _run(["xcrun", "simctl", "get_app_container",
+                          target["udid"], app_id, "app"]).stdout.strip()
+        if not container:
+            return None
+        plist = _run(["plutil", "-convert", "json", "-o", "-", f"{container}/Info.plist"]).stdout
+        info = json.loads(plist)
+        short, build = info.get("CFBundleShortVersionString"), info.get("CFBundleVersion")
+        if not short:
+            return None
+        return f"{short} ({build})" if build else short
+    except (KeyError, json.JSONDecodeError, OSError, subprocess.SubprocessError):
+        return None
